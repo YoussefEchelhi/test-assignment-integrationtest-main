@@ -3,10 +3,10 @@
 */ 
 
 import * as movieapp from "../movieApp";
-import { IMovie } from "../models/Movie";
+import { movies } from "../services/__mock__/movieservice";
 
 beforeEach(() => {
-    document.body.innerHTML = ``;
+    document.body.innerHTML = ``;   
 });    
 
 test("Should show 'Inga sökresultat att visa')", () => {
@@ -31,16 +31,6 @@ test("Should create HTML", () => {
     <div id="movie-container"></div>
     `;
 
-    let movies: IMovie[] = [
-      {
-        Title: "The Last of Us",
-        imdbID: "tt3581920",
-        Type: "Drama",
-        Poster: "..",
-        Year: "2023"
-      },
-    ];
-
     let container: HTMLDivElement = document.getElementById("movie-container") as HTMLDivElement;
 
     //Act
@@ -48,7 +38,35 @@ test("Should create HTML", () => {
       
     //Assert
     expect(movies[0].Title).toBe('The Last of Us');
+    expect(movies.length).toBe(4);
   });
+
+  test ("should test init",() => {
+
+    //Arrange
+    document.body.innerHTML = 
+    `<form id="searchForm">
+        <input type="text" id="searchText" placeholder="Skriv titel här"/>
+        <div id="movie-container"></div>
+      </form>`;
+  
+      let form = document.getElementById("searchForm") as HTMLFormElement;
+
+      let spy = jest.spyOn(movieapp, 'handleSubmit').mockReturnValue(new Promise<void>((resolve) => {
+        resolve();
+      }));
+      
+    //Act
+    movieapp.init();
+    form.submit();
+  
+    //Assert
+    expect(spy).toHaveBeenCalled();
+  });
+
+ 
+
+  
 
 
 
